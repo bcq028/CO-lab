@@ -19,28 +19,40 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+`include "defines.vh"
 
 module maindec(
 	input wire[5:0] op,
 
-	output wire memtoreg,memwrite,
-	output wire branch,alusrc,
-	output wire regdst,regwrite,
+	output wire regwrite,
+	output wire regdst,
+	output wire [1:0] alusrc,
+	output wire branch,
+	output wire memwrite,
+	output wire memtoreg,
 	output wire jump,
-	output wire[1:0] aluop
+	output wire[3:0] aluop
     );
-	reg[8:0] controls;
+
+	reg[11:0] controls;
+
 	assign {regwrite,regdst,alusrc,branch,memwrite,memtoreg,jump,aluop} = controls;
+
 	always @(*) begin
 		case (op)
-			6'b000000:controls <= 9'b110000010;//R-TYRE
-			6'b100011:controls <= 9'b101001000;//LW
-			6'b101011:controls <= 9'b001010000;//SW
-			6'b000100:controls <= 9'b000100001;//BEQ
-			6'b001000:controls <= 9'b101000000;//ADDI
+			`R_TYPE:controls <= {8'b1_1_00_0_0_0_0, `R_TYPE_OP};
 			
-			6'b000010:controls <= 9'b000000100;//J
-			default:  controls <= 9'b000000000;//illegal op
+			`ANDI:  controls <= {8'b1_0_10_0_0_0_0, `ANDI_OP};
+			`XORI:	controls <= {8'b1_0_10_0_0_0_0, `XORI_OP};
+			`LUI:	controls <= {8'b1_0_10_0_0_0_0, `LUI_OP};
+			`ORI:	controls <= {8'b1_0_10_0_0_0_0, `ORI_OP};
+
+			`LW: 	controls <= {8'b1_0_01_0_0_1_0, `MEM_OP};
+			`SW: 	controls <= {8'b0_0_01_0_1_0_0, `MEM_OP};
+			`BEQ: 	controls <= {8'b0_0_00_1_0_0_0, `USELESS_OP};
+			`ADDI: 	controls <= {8'b1_0_01_0_0_0_0, `ADDI_OP};
+			`J: 	controls <= {8'b0_0_00_0_0_0_1, `USELESS_OP};
+			default:  controls <= 12'b000000000000;//illegal op
 		endcase
 	end
 endmodule

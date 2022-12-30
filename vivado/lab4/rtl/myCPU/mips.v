@@ -21,36 +21,44 @@
 
 
 module mips(
-	input wire clk,rst,
-	output wire[31:0] pcF,
-	input wire[31:0] instrF,
-	output wire memwriteM,
-	output wire[31:0] aluoutM,writedataM,
-	input wire[31:0] readdataM 
+	input 	wire 		clk,
+	input 	wire 		rst,
+
+	//instr
+	input 	wire[31:0] 	instrF,
+	output 	wire[31:0] 	pcF,
+	
+	//data
+	input 	wire[31:0] 	readdataM,
+	output 	wire 		memwriteM,
+	output 	wire[31:0] 	aluoutM,
+	output 	wire[31:0] 	writedataM
     );
 	
+	//controller 
 	wire [5:0] opD,functD;
-	wire regdstE,alusrcE,pcsrcD,memtoregE,memtoregM,memtoregW,
-			regwriteE,regwriteM,regwriteW;
-	wire [2:0] alucontrolE;
+	wire regdstE,pcsrcD,memtoregE,memtoregM,memtoregW,regwriteE,regwriteM,regwriteW;
+	wire [1:0] alusrcE;
+	wire [4:0] alucontrolE;
 	wire flushE,equalD;
 
 	controller c(
 		clk,rst,
-		//decode stage
+		// 译码
 		opD,functD,
 		pcsrcD,branchD,equalD,jumpD,
 		
-		//execute stage
+		// 执行
 		flushE,
 		memtoregE,alusrcE,
 		regdstE,regwriteE,	
 		alucontrolE,
 
-		//mem stage
+		// 访存
 		memtoregM,memwriteM,
 		regwriteM,
-		//write back stage
+
+		// 写回
 		memtoregW,regwriteW
 		);
 	datapath dp(

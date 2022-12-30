@@ -29,7 +29,6 @@ module pc #(parameter WIDTH = 8)(
 		if(rst) begin
 			q <= 0;
 		end else if(en) begin
-			/* code */
 			q <= d;
 		end
 	end

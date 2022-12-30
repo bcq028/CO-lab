@@ -24,6 +24,7 @@ verilog xil_defaultlib  --include "../../../../../rtl/myCPU/utils" \
 "../../../../../rtl/myCPU/signext.v" \
 "../../../../../rtl/myCPU/sl2.v" \
 "../../../../../rtl/top.v" \
+"../../../../../rtl/myCPU/zeroext.v" \
 "../../../../../sim/mycpu_tb.v" \
 
 # compile glbl module

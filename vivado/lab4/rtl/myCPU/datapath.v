@@ -32,9 +32,10 @@ module datapath(
 	output wire[5:0] opD,functD,
 	//execute stage
 	input wire memtoregE,
-	input wire alusrcE,regdstE,
+	input wire[1:0] alusrcE,
+	input wire regdstE,
 	input wire regwriteE,
-	input wire[2:0] alucontrolE,
+	input wire[4:0] alucontrolE,
 	output wire flushE,
 	//mem stage
 	input wire memtoregM,
@@ -104,13 +105,15 @@ module datapath(
 	//regfile (operates in decode and writeback)
 	regfile rf(clk,regwriteW,rsD,rtD,writeregW,resultW,srcaD,srcbD);
 
-	//fetch stage logic
+	// 取指
 	pc #(32) pcreg(clk,rst,~stallF,pcnextFD,pcF);
 	adder pcadd1(pcF,32'b100,pcplus4F);
-	//decode stage
+
+	// 译码
 	flopenr #(32) r1D(clk,rst,~stallD,pcplus4F,pcplus4D);
 	flopenrc #(32) r2D(clk,rst,~stallD,flushD,instrF,instrD);
 	signext se(instrD[15:0],signimmD);
+	zeroext ze(instrD[15:0],zeroimmD); // 实现无符号拓展
 	sl2 immsh(signimmD,signimmshD);
 	adder pcadd2(pcplus4D,signimmshD,pcbranchD);
 	mux2 #(32) forwardamux(srcaD,aluoutM,forwardaD,srca2D);
@@ -130,10 +133,13 @@ module datapath(
 	floprc #(5) r4E(clk,rst,flushE,rsD,rsE);
 	floprc #(5) r5E(clk,rst,flushE,rtD,rtE);
 	floprc #(5) r6E(clk,rst,flushE,rdD,rdE);
-
+	floprc #(32) r7E(clk,rst,flushE,zeroimmD,zeroimmE); // 连接zeroext
+	
 	mux3 #(32) forwardaemux(srcaE,resultW,aluoutM,forwardaE,srca2E);
 	mux3 #(32) forwardbemux(srcbE,resultW,aluoutM,forwardbE,srcb2E);
-	mux2 #(32) srcbmux(srcb2E,signimmE,alusrcE,srcb3E);
+	// 将srcbmux改成mux3
+	// mux2 #(32) srcbmux(srcb2E,signimmE,alusrcE,srcb3E);
+	mux3 #(32) srcbmux(srcb2E,signimmE,zeroimmE,alusrcE,srcb3E);
 	alu alu(srca2E,srcb3E,alucontrolE,aluoutE);
 	mux2 #(5) wrmux(rtE,rdE,regdstE,writeregE);
 
