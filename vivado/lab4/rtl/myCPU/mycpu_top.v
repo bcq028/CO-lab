@@ -21,32 +21,35 @@ module mycpu_top(
 	wire [31:0] instr;
 	wire memwrite;
 	wire [31:0] aluout, writedata, readdata;
+    
     mips mips(
-        .clk(clk),
-        .rst(~resetn),
+        .clk        (clk        ),
+        .rst        (~resetn    ),
+
         //instr
         // .inst_en(inst_en),
-        .pcF(pc),                    //pcF
-        .instrF(instr),              //instrF
+        .pcF        (pc         ),
+        .instrF     (instr      ),
+        
         //data
         // .data_en(data_en),
-        .memwriteM(memwrite),
-        .aluoutM(aluout),
-        .writedataM(writedata),
-        .readdataM(readdata)
+        .memwriteM  (memwrite   ),
+        .aluoutM    (aluout     ),
+        .writedataM (writedata  ),
+        .readdataM  (readdata   )
     );
 
-    assign inst_sram_en = 1'b1;     //如果有inst_en，就用inst_en
-    assign inst_sram_wen = 4'b0;
-    assign inst_sram_addr = pc;
-    assign inst_sram_wdata = 32'b0;
-    assign instr = inst_sram_rdata;
+    assign inst_sram_en     = 1'b1;     //如果有inst_en，就用inst_en
+    assign inst_sram_wen    = 4'b0;
+    assign inst_sram_addr   = pc;
+    assign inst_sram_wdata  = 32'b0;
+    assign instr            = inst_sram_rdata;
 
-    assign data_sram_en = 1'b1;     //如果有data_en，就用data_en
-    assign data_sram_wen = {4{memwrite}};
-    assign data_sram_addr = aluout;
-    assign data_sram_wdata = writedata;
-    assign readdata = data_sram_rdata;
+    assign data_sram_en     = 1'b1;     //如果有data_en，就用data_en
+    assign data_sram_wen    = {4{memwrite}};
+    assign data_sram_addr   = aluout;
+    assign data_sram_wdata  = writedata;
+    assign readdata         = data_sram_rdata;
 
     //ascii
     instdec instdec(
