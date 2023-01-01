@@ -25,6 +25,5 @@ module mux2 #(parameter WIDTH = 8)(
 	input wire s,
 	output wire[WIDTH-1:0] y
     );
-	
 	assign y = s ? d1 : d0;
 endmodule

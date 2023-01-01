@@ -23,7 +23,6 @@
 
 module maindec(
 	input wire[5:0] op,
-
 	output wire regwrite,
 	output wire regdst,
 	output wire [1:0] alusrc,
@@ -34,25 +33,25 @@ module maindec(
 	output wire[3:0] aluop
     );
 
-	reg[11:0] controls;
-
-	assign {regwrite,regdst,alusrc,branch,memwrite,memtoreg,jump,aluop} = controls;
+	reg [21:0] controls;
+	assign jump=0;
+	assign {aluop,alusrc,hilowrite,regwrite,regdst,memwrite,memtoreg,branch,bal,j,jal,jr,jalr,cp0write,syscall,break,eret} = controls;
 
 	always @(*) begin
-		case (op)
-			`R_TYPE:controls <= {8'b1_1_00_0_0_0_0, `R_TYPE_OP};
-			
-			`ANDI:  controls <= {8'b1_0_10_0_0_0_0, `ANDI_OP};
-			`XORI:	controls <= {8'b1_0_10_0_0_0_0, `XORI_OP};
-			`LUI:	controls <= {8'b1_0_10_0_0_0_0, `LUI_OP};
-			`ORI:	controls <= {8'b1_0_10_0_0_0_0, `ORI_OP};
-
-			`LW: 	controls <= {8'b1_0_01_0_0_1_0, `MEM_OP};
-			`SW: 	controls <= {8'b0_0_01_0_1_0_0, `MEM_OP};
-			`BEQ: 	controls <= {8'b0_0_00_1_0_0_0, `USELESS_OP};
-			`ADDI: 	controls <= {8'b1_0_01_0_0_0_0, `ADDI_OP};
-			`J: 	controls <= {8'b0_0_00_0_0_0_1, `USELESS_OP};
-			default:  controls <= 12'b000000000000;//illegal op
+			controls <= 22'b0;
+			case (op)
+			`R_TYPE:controls <= {`ORI_OP,	18'b10_00_1_0_0_0_0_0_0_0_0_0_0_0_0_0};
+			// 访存
+			`LB:	controls <= {`MEM_OP, 18'b01_00_1_0_1_1_0_0_0_0_0_0_0_0_0_0};
+			`LBU:	controls <= {`MEM_OP, 18'b01_00_1_0_1_1_0_0_0_0_0_0_0_0_0_0};
+			`LH:	controls <= {`MEM_OP, 18'b01_00_1_0_1_1_0_0_0_0_0_0_0_0_0_0};
+			`LHU:	controls <= {`MEM_OP, 18'b01_00_1_0_1_1_0_0_0_0_0_0_0_0_0_0};
+			`LW: 	controls <= {`MEM_OP, 18'b01_00_1_0_1_1_0_0_0_0_0_0_0_0_0_0};
+			`SB:	controls <= {`MEM_OP, 18'b01_00_0_0_1_0_0_0_0_0_0_0_0_0_0_0};
+			`SH:	controls <= {`MEM_OP, 18'b01_00_0_0_1_0_0_0_0_0_0_0_0_0_0_0};
+			`SW: 	controls <= {`MEM_OP, 18'b01_00_0_0_1_0_0_0_0_0_0_0_0_0_0_0};		
+			default: controls <= 22'b0;
 		endcase
 	end
+
 endmodule

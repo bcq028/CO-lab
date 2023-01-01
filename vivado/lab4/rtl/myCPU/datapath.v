@@ -113,6 +113,11 @@ module datapath(
 
 	//next PC logic (operates in fetch an decode)
 	mux2 #(32) pcbrmux(pcplus4F,pcbranchD,pcsrcD,pcnextbrFD);
+
+	always @(*) begin
+		$display("d0 is: %b d1 is: %b jump: %b",pcnextbrFD,{pcplus4D[31:28],instrD[25:0],2'b00},jumpD);
+	end
+
 	mux2 #(32) pcmux(pcnextbrFD,
 		{pcplus4D[31:28],instrD[25:0],2'b00},
 		jumpD,pcnextFD);

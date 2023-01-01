@@ -63,7 +63,11 @@ module controller(
 		.aluop(aluopD)
     );
 
-	aludec ad(functD,aluopD,alucontrolD);
+	aludec aludec (
+		.funct 		(functD		),
+		.aluop 		(aluopD		),
+		.alucontrol	(alucontrolD)
+	);
 
 	assign pcsrcD = branchD & equalD;
 
