@@ -65,8 +65,35 @@ module datapath(
 	wire [31:0] signimmE;
 	wire [31:0] srcaE,srca2E,srcbE,srcb2E,srcb3E;
 	wire [31:0] aluoutE;
+	wire [31:0] aluout2E;
+	wire [5:0] opE;
 	//mem stage
+	wire [31:0] instrM;
+	wire [31:0] pcM;
+	wire [5:0] opM;
+	wire [4:0] rdM;
 	wire [4:0] writeregM;
+	wire [1:0] hilowriteM;
+	wire [31:0] hialuoutM;
+	wire [31:0] loaluoutM;
+	wire [31:0] writedataM;
+	wire [31:0] finaldataM;
+	wire [31:0] erroraddrM;
+	wire laddrerrorM;
+	wire saddrerrorM;
+	wire isindelayslotM;
+	wire [7:0] exceptionM;
+	wire [31:0] exceptiontypeM;
+	wire [31:0] pcexceptionM;
+	wire [31:0] countout;
+	wire [31:0] compareout;
+	wire [31:0] statusout;
+	wire [31:0] causeout;
+	wire [31:0] epcout;
+	wire [31:0] configout;
+	wire [31:0] pridout;
+	wire [31:0] badvaddrout;
+	wire timerintout;
 	//writeback stage
 	wire [4:0] writeregW;
 	wire [31:0] aluoutW,readdataW,resultW;
@@ -112,6 +139,7 @@ module datapath(
 	// 译码
 	flopenr #(32) r1D(clk,rst,~stallD,pcplus4F,pcplus4D);
 	flopenrc #(32) r2D(clk,rst,~stallD,flushD,instrF,instrD);
+	flopenrc #(32) r3D (clk,rst,~stallD,flushD,pcF,pcD);
 	signext se(instrD[15:0],signimmD);
 	zeroext ze(instrD[15:0],zeroimmD); // 实现无符号拓展
 	sl2 immsh(signimmD,signimmshD);
@@ -134,6 +162,9 @@ module datapath(
 	floprc #(5) r5E(clk,rst,flushE,rtD,rtE);
 	floprc #(5) r6E(clk,rst,flushE,rdD,rdE);
 	floprc #(32) r7E(clk,rst,flushE,zeroimmD,zeroimmE); // 连接zeroext
+	flopenrc #(32) r15E (clk,rst,~stallE,flushE,opD,opE);
+
+	flopenrc #(32) r11E (clk,rst,~stallE,flushE,pcD,pcE);
 	
 	mux3 #(32) forwardaemux(srcaE,resultW,aluoutM,forwardaE,srca2E);
 	mux3 #(32) forwardbemux(srcbE,resultW,aluoutM,forwardbE,srcb2E);
@@ -153,4 +184,20 @@ module datapath(
 	flopr #(32) r2W(clk,rst,readdataM,readdataW);
 	flopr #(5) r3W(clk,rst,writeregM,writeregW);
 	mux2 #(32) resmux(aluoutW,readdataW,memtoregW,resultW);
+
+	//memory visit
+	floprc #(32) r1M (clk,rst,flushM,srcb2E,writedataM);
+	floprc #(32) r2M (clk,rst,flushM,aluoutE,aluoutM);
+	floprc #(5)  r3M (clk,rst,flushM,writereg2E,writeregM);
+	floprc #(2)  r4M (clk,rst,flushM,hilowrite2E,hilowriteM);
+	floprc #(64) r5M (clk,rst,flushM,{hialuout2E,loaluout2E},{hialuoutM,loaluoutM});
+	floprc #(32) r6M (clk,rst,flushM,pcE,pcM);
+	floprc #(32) r7M (clk,rst,flushM,opE,opM);
+	floprc #(5)  r8M (clk,rst,flushM,rdE,rdM);
+	floprc #(1)  r9M (clk,rst,flushM,isindelayslotE,isindelayslotM);
+	floprc #(8)  r10M (clk,rst,flushM,{exceptionE[7:3],overflow,exceptionE[1:0]},exceptionM);
+	floprc #(32) r11M (clk,rst,flushM,instrE,instrM);
+
+	memsel memsel (pcM,opM,aluoutM,writedataM,readdataM,selM,writedata2M,finaldataM,erroraddrM,laddrerrorM,saddrerrorM);
+
 endmodule
