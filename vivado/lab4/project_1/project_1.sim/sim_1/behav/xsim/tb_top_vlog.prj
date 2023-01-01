@@ -15,6 +15,7 @@ verilog xil_defaultlib  --include "../../../../../rtl/myCPU/utils" \
 "../../../../../rtl/myCPU/hazard.v" \
 "../../../../../rtl/myCPU/utils/instdec.v" \
 "../../../../../rtl/myCPU/maindec.v" \
+"../../../../project_1.srcs/sources_1/imports/myCPU/memsel.v" \
 "../../../../../rtl/myCPU/mips.v" \
 "../../../../../rtl/myCPU/mux2.v" \
 "../../../../../rtl/myCPU/mux3.v" \
