@@ -24,7 +24,9 @@ module controller(
 	input wire clk,rst,
 	//decode stage
 	input wire[5:0] opD,functD,
-	output wire pcsrcD,branchD,equalD,jumpD,
+	output wire pcsrcD,branchD,
+	input wire equalD,
+	output wire jumpD,
 	
 	//execute stage
 	input wire flushE,
@@ -43,9 +45,9 @@ module controller(
 	
 	//decode stage
 	wire[3:0] aluopD;
-	wire memtoregD,memwriteD,
-		regdstD,regwriteD;
+	wire memtoregD,memwriteD;
 	wire [1:0] alusrcD;
+	wire regdstD,regwriteD;
 	wire[4:0] alucontrolD;
 
 	//execute stage

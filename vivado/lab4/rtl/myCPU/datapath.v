@@ -57,12 +57,14 @@ module datapath(
 	wire [4:0] rsD,rtD,rdD;
 	wire flushD,stallD; 
 	wire [31:0] signimmD,signimmshD;
+	wire [31:0] zeroimmD;
 	wire [31:0] srcaD,srca2D,srcbD,srcb2D;
 	//execute stage
 	wire [1:0] forwardaE,forwardbE;
 	wire [4:0] rsE,rtE,rdE;
 	wire [4:0] writeregE;
 	wire [31:0] signimmE;
+	wire [31:0] zeroimmE;
 	wire [31:0] srcaE,srca2E,srcbE,srcb2E,srcb3E;
 	wire [31:0] aluoutE;
 	//mem stage
