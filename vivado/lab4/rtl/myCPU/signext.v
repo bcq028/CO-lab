@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/02 14:29:33
+// Create Date: 2018/11/18 13:21:14
 // Design Name: 
 // Module Name: signext
 // Project Name: 
@@ -21,9 +21,10 @@
 
 
 module signext(
-	input wire[15:0] a,
-	output wire[31:0] y
+	input wire [15:0] a,
+	output wire [31:0] y
     );
-
-	assign y = {{16{a[15]}},a};
+	
+	assign y = {{16{a[15]}}, a};
+	
 endmodule

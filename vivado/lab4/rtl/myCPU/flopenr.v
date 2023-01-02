@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/23 22:54:57
+// Create Date: 2018/12/09 00:58:10
 // Design Name: 
 // Module Name: flopenr
 // Project Name: 
@@ -20,17 +20,20 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module flopenr #(parameter WIDTH = 8)(
-	input wire clk,rst,en,
-	input wire[WIDTH-1:0] d,
-	output reg[WIDTH-1:0] q
+module flopenr #(parameter width = 8)(
+	input wire clk,
+	input wire rst,
+	input wire en,
+	input wire [width-1:0] d,
+	output reg [width-1:0] q
     );
-	always @(posedge clk) begin
-		if(rst) begin
+
+	always @ (posedge clk)
+	begin
+		if (rst)
 			q <= 0;
-		end else if(en) begin
-			/* code */
+		else if (en)
 			q <= d;
-		end
 	end
+
 endmodule

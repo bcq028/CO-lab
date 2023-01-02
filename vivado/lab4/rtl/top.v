@@ -44,7 +44,7 @@ module top(
     //cpu
     mycpu_top cpu(
         .clk              (~clk      ),  //相当于对inst_ram和data_ram时钟取反
-        .resetn           (resetn    ),  //low active
+        .resetn           (~resetn    ),  //low active
 
         .inst_sram_en     (cpu_inst_en   ),
         .inst_sram_wen    (cpu_inst_wen  ),

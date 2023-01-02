@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/02 14:32:42
+// Create Date: 2018/11/18 13:30:10
 // Design Name: 
 // Module Name: flopr
 // Project Name: 
@@ -20,16 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module flopr #(parameter WIDTH = 8)(
-	input wire clk,rst,
-	input wire[WIDTH-1:0] d,
-	output reg[WIDTH-1:0] q
+module flopr #(parameter width = 8)(
+	input wire clk,
+	input wire rst,
+	input wire [width-1:0] d,
+	output reg [width-1:0] q 
     );
-	always @(posedge clk,posedge rst) begin
-		if(rst) begin
+
+	always @ (posedge clk or posedge rst)
+	begin
+		if (rst)
 			q <= 0;
-		end else begin
+		else
 			q <= d;
-		end
 	end
+
 endmodule

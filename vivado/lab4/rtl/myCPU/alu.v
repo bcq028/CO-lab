@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/02 14:52:16
+// Create Date: 2018/10/14 22:19:49
 // Design Name: 
-// Module Name: alu
+// Module Name: calculate
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -22,59 +22,66 @@
 `include "defines.vh"
 
 module alu(
-	input 	wire[31:0] 	a,
-	input 	wire[31:0] 	b,
-	input 	wire[4:0] 	alucontrol,
-	output 	reg[31:0] 	y
-	// output reg overflow,
-	// output wire zero
+	input  wire [31:0] a,
+	input  wire [31:0] b,
+	input  wire [4:0] sa,
+	input  wire [4:0] alucontrol,
+	input  wire [31:0] hialuin,loaluin,
+	input  wire [31:0] cp0aluin,
+	output reg  [31:0] y,
+	output reg  [31:0] hialuout,loaluout,
+	output reg  overflow
     );
-
-	always @(*) 
+	
+	always @ (*)
 	begin
 		case (alucontrol)
-			// 逻辑运算指令
-			`AND_CONTROL: 	y <= a & b;
-			`OR_CONTROL:  	y <= a | b;
-			`XOR_CONTROL: 	y <= a ^ b;
-			`NOR_CONTROL: 	y <= ~(a | b);
-			`LUI_CONTROL: 	y <= {b[15:0], 16'b0};
+			// 逻辑运算
+			`AND_CONTROL:	y <= a & b;
+			`OR_CONTROL: 	y <= a | b;
+			`XOR_CONTROL:	y <= a ^ b;
+			`NOR_CONTROL:	y <= ~(a | b);
+			`LUI_CONTROL:	y <= {b[15:0], 16'b0};
 
-			// 移位指令
-			// `SLL_CONTROL: 	y <= b << sa;
-			// `SRL_CONTROL: 	y <= b >> sa;
-			// `SRA_CONTROL: 	y <= b >> sa | ({32{b[31]}} << (6'd32 - {1'b0,sa}));
-			`SLLV_CONTROL: 	y <= b << a[4:0];
-			`SRLV_CONTROL: 	y <= b >> a[4:0];
-			`SRAV_CONTROL: 	y <= b >> a[4:0] | ({32{b[31]}} << (6'd32 - {1'b0,a[4:0]}));
+			// 移位
+			`SLL_CONTROL:	y <= b << sa;
+			`SRL_CONTROL:	y <= b >> sa;
+			`SRA_CONTROL:	y <= b >> sa | ({32{b[31]}} << (6'd32 - {1'b0,sa}));
+			`SLLV_CONTROL:	y <= b << a[4:0];
+			`SRLV_CONTROL:	y <= b >> a[4:0];
+			`SRAV_CONTROL:	y <= b >> a[4:0] | ({32{b[31]}} << (6'd32 - {1'b0,a[4:0]}));
 
-			`ADD_CONTROL: 	y <= a + b;
-			`SUB_CONTROL: 	y <= a - b;
-			`SLT_CONTROL: 	y <= (a < b);
-			default: 		y <= 32'b0;
+			// 数据移动
+			`MFHI_CONTROL:	y <= hialuin;
+			`MFLO_CONTROL:	y <= loaluin;
+			`MTHI_CONTROL:	hialuout <= a;
+			`MTLO_CONTROL:	loaluout <= a;
+
+			// 算术运算
+			`ADD_CONTROL:	y <= a + b;
+			`ADDU_CONTROL:	y <= a + b;
+			`SUB_CONTROL:	y <= a - b;
+			`SUBU_CONTROL:	y <= a - b;
+			`SLT_CONTROL:	y <= ($signed(a) < $signed(b));
+			`SLTU_CONTROL:	y <= (a < b);
+			`MULT_CONTROL:	{hialuout,loaluout} <= $signed(a) * $signed(b);
+			`MULTU_CONTROL:	{hialuout,loaluout} <= a * b;
+
+			// 特权
+			`MFC0_CONTROL:	y <= cp0aluin;
+			`MTC0_CONTROL:	y <= b; 
+			
+			default: y <= 32'b0;
 		endcase
 	end
-	// wire[31:0] s,bout;
-	// assign bout = alucontrol[2] ? ~b : b;
-	// assign s = a + bout + alucontrol[2];
-	// always @(*) begin
-	// 	case (alucontrol[1:0])
-	// 		2'b00: y <= a & bout;
-	// 		2'b01: y <= a | bout;
-	// 		2'b10: y <= s;
-	// 		2'b11: y <= s[31];
-	// 		default : y <= 32'b0;
-	// 	endcase	
-	// end
-	// assign zero = (y == 32'b0);
 
-	// always @(*) begin
-	// 	case (alucontrol[2:1])
-	// 		2'b01:overflow <= a[31] & b[31] & ~s[31] |
-	// 						~a[31] & ~b[31] & s[31];
-	// 		2'b11:overflow <= ~a[31] & b[31] & s[31] |
-	// 						a[31] & ~b[31] & ~s[31];
-	// 		default : overflow <= 1'b0;
-	// 	endcase	
-	// end
+	always @ (*)
+	begin
+		case (alucontrol)
+			`ADD_CONTROL: overflow <= a[31] & b[31] & ~y[31] | ~a[31] & ~b[31] & y[31];
+			`SUB_CONTROL: overflow <= a[31] & ~b[31] & ~y[31] | ~a[31] & b[31] & y[31];
+			default: overflow <= 0;
+        endcase
+	end
+
 endmodule

@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/22 10:23:13
+// Create Date: 2018/12/09 01:26:18
 // Design Name: 
 // Module Name: hazard
 // Project Name: 
@@ -21,77 +21,86 @@
 
 
 module hazard(
-	//fetch stage
+	// fetch stage
 	output wire stallF,
-	//decode stage
-	input wire[4:0] rsD,rtD,
-	input wire branchD,
-	output wire forwardaD,forwardbD,
+	output wire flushF,
+	// decode stage
+	input  wire [4:0] rsD,
+	input  wire [4:0] rtD,
+	input  wire branchD,
+	output wire [1:0] forwardaD,
+	output wire [1:0] forwardbD,
 	output wire stallD,
-	//execute stage
-	input wire[4:0] rsE,rtE,
-	input wire[4:0] writeregE,
-	input wire regwriteE,
-	input wire memtoregE,
-	output reg[1:0] forwardaE,forwardbE,
+	output wire flushD,
+	// execute stage
+	input  wire [4:0] rsE,
+	input  wire [4:0] rtE,
+	input  wire [4:0] rdE,
+	input  wire [4:0] writeregE,
+	input  wire regwriteE,
+	input  wire memtoregE,
+	input  wire [1:0] hilowriteE,
+	output wire [1:0] forwardaE,
+	output wire [1:0] forwardbE,
+	output wire [1:0] forwardhiloE,
+	output wire forwardcp0dataE,
 	output wire flushE,
-	//mem stage
-	input wire[4:0] writeregM,
-	input wire regwriteM,
-	input wire memtoregM,
-
-	//write back stage
-	input wire[4:0] writeregW,
-	input wire regwriteW
+	output wire stallE,
+	input  wire divstartE,
+	// memory visit stage
+	input  wire [4:0] writeregM,
+	input  wire regwriteM,
+	input  wire memtoregM,
+	input  wire [1:0] hilowriteM,
+	input  wire cp0writeM,
+	input  wire [4:0] rdM,
+	output wire flushM,
+	input  wire exceptionoccur,
+	// write back stage
+	input  wire [4:0] writeregW,
+	input  wire regwriteW,
+	input  wire [1:0] hilowriteW,
+	output wire flushW
     );
 
-	wire lwstallD,branchstallD;
+	wire lwstallD;
+	wire branchstallD;
 
-	//forwarding sources to D stage (branch equality)
-	assign forwardaD = (rsD != 0 & rsD == writeregM & regwriteM);
-	assign forwardbD = (rtD != 0 & rtD == writeregM & regwriteM);
+	assign forwardaD = (rsD && (rsD == writeregE) && regwriteE) ? 2'b01:
+					   (rsD && (rsD == writeregM) && regwriteM) ? 2'b10:
+					   (rsD && (rsD == writeregW) && regwriteW) ? 2'b11:2'b00;
+
+	assign forwardbD = (rtD && (rtD == writeregE) && regwriteE) ? 2'b01:
+					   (rtD && (rtD == writeregM) && regwriteM) ? 2'b10:
+					   (rtD && (rtD == writeregW) && regwriteW) ? 2'b11:2'b00;
+
+	assign forwardaE = (rsE && (rsE == writeregM) && regwriteM) ? 2'b01:
+					   (rsE && (rsE == writeregW) && regwriteW) ? 2'b10:2'b00;
+
+	assign forwardbE = (rtE && (rtE == writeregM) && regwriteM) ? 2'b01:
+					   (rtE && (rtE == writeregW) && regwriteW) ? 2'b10:2'b00;
+
+	assign forwardhiloE = (!hilowriteE && hilowriteM) ? 2'b01:
+						  (!hilowriteE && hilowriteW) ? 2'b10:2'b00;
+
+	assign forwardcp0dataE = (rdE && (rdE == rdM) && cp0writeM);
+
+	assign lwstallD = memtoregE && ((rtE == rsD) || (rtE == rtD));
+
+	assign branchstallD = branchD && 
+			(regwriteE &&
+			((writeregE == rsD) || (writeregE == rtD))|| 
+			memtoregM &&
+			((writeregM == rsD) || (writeregM == rtD)));
+
+	assign stallF = lwstallD || branchstallD || divstartE;
+	assign stallD = lwstallD || branchstallD || divstartE;
+	assign stallE = divstartE;
+
+	assign flushF = exceptionoccur;
+	assign flushD = exceptionoccur;
+	assign flushE = lwstallD || branchstallD || exceptionoccur;
+	assign flushM = exceptionoccur;
+	assign flushW = exceptionoccur;
 	
-	//forwarding sources to E stage (ALU)
-
-	always @(*) begin
-		forwardaE = 2'b00;
-		forwardbE = 2'b00;
-		if(rsE != 0) begin
-			/* code */
-			if(rsE == writeregM & regwriteM) begin
-				/* code */
-				forwardaE = 2'b10;
-			end else if(rsE == writeregW & regwriteW) begin
-				/* code */
-				forwardaE = 2'b01;
-			end
-		end
-		if(rtE != 0) begin
-			/* code */
-			if(rtE == writeregM & regwriteM) begin
-				/* code */
-				forwardbE = 2'b10;
-			end else if(rtE == writeregW & regwriteW) begin
-				/* code */
-				forwardbE = 2'b01;
-			end
-		end
-	end
-
-	//stalls
-	assign #1 lwstallD = memtoregE & (rtE == rsD | rtE == rtD);
-	assign #1 branchstallD = branchD &
-				(regwriteE & 
-				(writeregE == rsD | writeregE == rtD) |
-				memtoregM &
-				(writeregM == rsD | writeregM == rtD));
-	assign #1 stallD = lwstallD | branchstallD;
-	assign #1 stallF = stallD;
-		//stalling D stalls all previous stages
-	assign #1 flushE = stallD;
-		//stalling D flushes next stage
-	// Note: not necessary to stall D stage on store
-  	//       if source comes from load;
-  	//       instead, another bypass network could
-  	//       be added from W to M
 endmodule

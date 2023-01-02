@@ -16,29 +16,25 @@ module mycpu_top(
     input  [31:0] data_sram_rdata
 );
 
-// 一个例子
 	wire [31:0] pc;
 	wire [31:0] instr;
-	wire memwrite;
-	wire [31:0] aluout, writedata, readdata;
+	wire [31:0] readdata;
+    wire [31:0] writedata;
+    wire [31:0] aluout;
+	wire [39:0] ascii;
+	wire [3:0] sel;
     
-    mips mips(
-        .clk        (clk        ),
-        .rst        (~resetn    ),
-
-        //instr
-        // .inst_en(inst_en),
-        .pcF        (pc         ),
-        .instrF     (instr      ),
-        
-        //data
-        // .data_en(data_en),
-        .memwriteM  (memwrite   ),
-        .aluoutM    (aluout     ),
-        .writedataM (writedata  ),
-        .readdataM  (readdata   )
-    );
-
+  	mips mips (
+		.clk		(clk		),
+		.rst		(resetn		),
+		.pcF		(pc			),
+		.instrF		(instr		),
+		.memwriteM	(memwrite	),
+		.aluoutM	(aluout	),
+		.writedata2M(writedata	),
+		.readdataM	(readdata	),
+		.selM		(sel		)
+	);
     assign inst_sram_en     = 1'b1;     //如果有inst_en，就用inst_en
     assign inst_sram_wen    = 4'b0;
     assign inst_sram_addr   = pc;

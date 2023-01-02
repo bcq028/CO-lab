@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2017/11/02 14:44:10
+// Create Date: 2018/11/18 13:22:15
 // Design Name: 
 // Module Name: mux2
 // Project Name: 
@@ -20,11 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module mux2 #(parameter WIDTH = 8)(
-	input wire[WIDTH-1:0] d0,d1,
+module mux2 #(parameter width = 8) (
+	input wire [width-1:0] d0,
+	input wire [width-1:0] d1,
 	input wire s,
-	output wire[WIDTH-1:0] y
+	output wire [width-1:0] y
     );
+
+	assign y = s ? d1:d0;
 	
-	assign y = s ? d1 : d0;
 endmodule
