@@ -1,0 +1,1 @@
+gtkwave.exe trace.vcd
