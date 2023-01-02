@@ -4,7 +4,7 @@ Nov  6 2019
 21:57:16
 D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/project_1/project_1.sim/sim_1/behav/xsim/glbl.v,1672463809,verilog,,,,glbl,,,,,,,,
 D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/adder.v,1672463810,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/alu.v,,adder,,,../../../../../rtl/myCPU/utils,,,,,
-D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/alu.v,1672463810,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/aludec.v,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/utils/defines.vh,alu,,,../../../../../rtl/myCPU/utils,,,,,
+D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/alu.v,1672657290,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/aludec.v,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/utils/defines.vh,alu,,,../../../../../rtl/myCPU/utils,,,,,
 D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/aludec.v,1672576800,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/controller.v,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/utils/defines.vh,aludec,,,../../../../../rtl/myCPU/utils,,,,,
 D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/controller.v,1672655171,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/datapath.v,,controller,,,../../../../../rtl/myCPU/utils,,,,,
 D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/datapath.v,1672463810,verilog,,D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/myCPU/eqcmp.v,,datapath,,,../../../../../rtl/myCPU/utils,,,,,

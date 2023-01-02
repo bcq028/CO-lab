@@ -24,6 +24,7 @@
 module alu(
 	input 	wire[31:0] 	a,
 	input 	wire[31:0] 	b,
+	input 	wire[4:0] 	sa,
 	input 	wire[4:0] 	alucontrol,
 	output 	reg[31:0] 	y
 	// output reg overflow,
@@ -41,9 +42,9 @@ module alu(
 			`LUI_CONTROL: 	y <= {b[15:0], 16'b0};
 
 			// 移位指令
-			// `SLL_CONTROL: 	y <= b << sa;
-			// `SRL_CONTROL: 	y <= b >> sa;
-			// `SRA_CONTROL: 	y <= b >> sa | ({32{b[31]}} << (6'd32 - {1'b0,sa}));
+			`SLL_CONTROL: 	y <= b << sa;
+			`SRL_CONTROL: 	y <= b >> sa;
+			`SRA_CONTROL: 	y <= b >> sa | ({32{b[31]}} << (6'd32 - {1'b0,sa}));
 			`SLLV_CONTROL: 	y <= b << a[4:0];
 			`SRLV_CONTROL: 	y <= b >> a[4:0];
 			`SRAV_CONTROL: 	y <= b >> a[4:0] | ({32{b[31]}} << (6'd32 - {1'b0,a[4:0]}));

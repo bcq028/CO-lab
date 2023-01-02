@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Wed Dec 28 22:04:47 2022
+-- Date        : Mon Jan  2 19:08:23 2023
 -- Host        : LAPTOP-COK03RDI running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode synth_stub
---               D:/MingCheng/Code_Field/Code_Mips/MipsPro/CO-lab/vivado/lab4/rtl/xilinx_ip/inst_ram/inst_ram_stub.vhdl
+--               D:/MingCheng/Code_Field/Code_Mips/dev/CO-lab/vivado/lab4/rtl/xilinx_ip/inst_ram/inst_ram_stub.vhdl
 -- Design      : inst_ram
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7a100tcsg324-1
