@@ -17,3 +17,5 @@ make -j `nproc`  # Build Verilator itself (if error, try just 'make')
 sudo make install
 
 sudo apt install gtkwave
+
+sudo chmod -R 777 . 
