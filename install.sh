@@ -1,3 +1,4 @@
+sudo chmod -R 777 . 
 sudo sed -i "s@http://.*archive.ubuntu.com@https://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
 sudo sed -i "s@http://.*security.ubuntu.com@https://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list
 sudo apt update
@@ -17,5 +18,3 @@ make -j `nproc`  # Build Verilator itself (if error, try just 'make')
 sudo make install
 
 sudo apt install gtkwave
-
-sudo chmod -R 777 . 
