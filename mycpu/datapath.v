@@ -23,6 +23,7 @@
 module datapath(
 	input  wire clk,
 	input  wire rst,
+	input wire [31:0] instrF,
 	output wire [31:0] pcF,
 	output wire [31:0] aluoutM,
 	output wire [31:0] writedata2M,
@@ -36,7 +37,6 @@ module datapath(
 	
 	// fetch
 	wire stallF;
-	wire instrF;
 	wire isindelayslotF;
 	wire [7:0] exceptionF;
 	wire flushF;
@@ -53,7 +53,7 @@ module datapath(
 	wire branchD;
 	wire equalD;
 	wire pcsrcD;
-	wire hilowriteD;
+	wire [1:0] hilowriteD;
 	wire balD;
 	wire jD;
 	wire jalD;
@@ -96,7 +96,7 @@ module datapath(
 	wire memwriteE;
 	wire cp0writeE;
 	wire [31:0] instrE; 
-	wire alusrcE;
+	wire [1:0] alusrcE;
 	wire regdstE;
 	wire alucontrolE;
 	wire overflow;

@@ -75,6 +75,7 @@ module mycpu_top(
 	datapath datapath (
 		.clk			(~clk			),
 		.rst 			(~resetn		),
+		.instrF			(instrF),
 		.pcF			(pcF			),
 		.aluoutM		(aluoutM		),
 		.writedata2M	(writedata2M	),
