@@ -30,7 +30,7 @@
 // Revision: 1.0
 //////////////////////////////////////////////////////////////////////
 
-`include "./utils/defines.vh"
+`include "defines.vh"
 
 module divider(
 	input wire clk,

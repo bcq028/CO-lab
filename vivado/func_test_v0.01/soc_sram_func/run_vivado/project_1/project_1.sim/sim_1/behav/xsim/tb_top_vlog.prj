@@ -1,12 +1,12 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  --include "../../../../../../../../../mycpu" --include "../../../../../../rtl/xilinx_ip/clk_pll" \
+verilog xil_defaultlib  --include "../../../../../../../../../mycpu/utils" --include "../../../../../../rtl/xilinx_ip/clk_pll" \
 "../../../../../../rtl/xilinx_ip/clk_pll/clk_pll_clk_wiz.v" \
 "../../../../../../rtl/xilinx_ip/clk_pll/clk_pll.v" \
 "../../../../../../rtl/xilinx_ip/data_ram/sim/data_ram.v" \
 "../../../../../../rtl/xilinx_ip/inst_ram/sim/inst_ram.v" \
 "../../../../../../../../../mycpu/adder.v" \
-"../../../../../../../../../mycpu/alu.v" \
-"../../../../../../../../../mycpu/aludec.v" \
+"../../../../../../../../../mycpu/EX/alu.v" \
+"../../../../../../../../../mycpu/ID/aludec.v" \
 "../../../../../../rtl/BRIDGE/bridge_1x2.v" \
 "../../../../../../rtl/CONFREG/confreg.v" \
 "../../../../../../../../../mycpu/controller.v" \
@@ -14,22 +14,22 @@ verilog xil_defaultlib  --include "../../../../../../../../../mycpu" --include "
 "../../../../../../../../../mycpu/datapath.v" \
 "../../../../../../../../../mycpu/divdec.v" \
 "../../../../../../../../../mycpu/divider.v" \
-"../../../../../../../../../mycpu/eqcmp.v" \
-"../../../../../../../../../mycpu/exceptiondec.v" \
+"../../../../../../../../../mycpu/ID/eqcmp.v" \
+"../../../../../../../../../mycpu/MEM/exceptiondec.v" \
 "../../../../../../../../../mycpu/flopenrc.v" \
 "../../../../../../../../../mycpu/floprc.v" \
 "../../../../../../../../../mycpu/hazard.v" \
 "../../../../../../../../../mycpu/hiloreg.v" \
-"../../../../../../../../../mycpu/instdec.v" \
-"../../../../../../../../../mycpu/maindec.v" \
-"../../../../../../../../../mycpu/memsel.v" \
+"../../../../../../../../../mycpu/IF/instdec.v" \
+"../../../../../../../../../mycpu/ID/maindec.v" \
+"../../../../../../../../../mycpu/MEM/memsel.v" \
 "../../../../../../../../../mycpu/mmu.v" \
 "../../../../../../../../../mycpu/mux2.v" \
 "../../../../../../../../../mycpu/mux3.v" \
 "../../../../../../../../../mycpu/mux4.v" \
 "../../../../../../../../../mycpu/mycpu_top.v" \
-"../../../../../../../../../mycpu/pc.v" \
-"../../../../../../../../../mycpu/regfile.v" \
+"../../../../../../../../../mycpu/IF/pc.v" \
+"../../../../../../../../../mycpu/ID/regfile.v" \
 "../../../../../../../../../mycpu/signext.v" \
 "../../../../../../../../../mycpu/sl2.v" \
 "../../../../../../rtl/soc_lite_top.v" \

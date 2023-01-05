@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`include "./utils/defines.vh"
+`include "defines.vh"
 
 module eqcmp(
 	input wire [31:0] a,b,

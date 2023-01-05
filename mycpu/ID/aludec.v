@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-`include "./utils/defines.vh"
+`include "defines.vh"
 
 module aludec(
 	input  wire [5:0] funct,
@@ -69,13 +69,13 @@ module aludec(
 				endcase
 			end
 
-			// 逻辑运算(I型)
+			// 逻辑运算(I�?)
 			`ANDI_OP:  alucontrol <= `AND_CONTROL;
 			`ORI_OP:   alucontrol <= `OR_CONTROL;
 			`XORI_OP:  alucontrol <= `XOR_CONTROL;
 			`LUI_OP:   alucontrol <= `LUI_CONTROL;
 
-			// 算术运算(I型)
+			// 算术运算(I�?)
 			`ADDI_OP:  alucontrol <= `ADD_CONTROL;
 			`ADDIU_OP: alucontrol <= `ADD_CONTROL;
 			`SLTI_OP:  alucontrol <= `SLT_CONTROL;

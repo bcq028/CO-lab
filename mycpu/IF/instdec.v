@@ -21,7 +21,7 @@
 
 `timescale 1ns / 1ps
 
-`include "./utils/defines.vh"
+`include "defines.vh"
 
 module instdec(
     input wire [31:0] instr,
