@@ -26,11 +26,11 @@
 // File:    divider.v
 // Author:  Lei Silei
 // E-mail:  leishangwen@163.com
-// Description: ³ý·¨Ä£¿é
+// Description: ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
 // Revision: 1.0
 //////////////////////////////////////////////////////////////////////
 
-`include "defines.vh"
+`include "./utils/defines.vh"
 
 module divider(
 	input wire clk,
