@@ -71,9 +71,6 @@ module alu(
 			`MFC0_CONTROL:	y <= cp0aluin;
 			`MTC0_CONTROL:	y <= b;
 
-			//
-			`MAX_CONTROL:	y <= ($signed(a) < $signed(b)) ? b:a;
-			
 			default: y <= 32'b0;
 		endcase
 	end

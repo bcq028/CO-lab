@@ -90,8 +90,6 @@
 `define SH                  6'b101001
 `define SW                  6'b101011
 
-`define MAX                 6'b111111
-
 `define SYSCALL             6'b001100
 `define BREAK               6'b001101
    

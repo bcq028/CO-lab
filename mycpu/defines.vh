@@ -89,8 +89,6 @@
 `define SB  				6'b101000
 `define SH  				6'b101001
 `define SW  				6'b101011
-`define MAX 				6'b111111
-
 `define SYSCALL 			6'b001100
 `define BREAK 				6'b001101
 
@@ -133,8 +131,6 @@
 `define SLLV_CONTROL    	5'b01011
 `define SRLV_CONTROL    	5'b01100
 `define SRAV_CONTROL    	5'b01101
-
-`define MAX_CONTROL			5'b01110	
 
 `define ADD_CONTROL     	5'b10000
 `define ADDU_CONTROL    	5'b10001

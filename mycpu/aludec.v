@@ -88,8 +88,6 @@ module aludec(
 			`MFC0_OP:  alucontrol <= `MFC0_CONTROL;
 			`MTC0_OP:  alucontrol <= `MTC0_CONTROL;
 
-			//
-			`MAX_OP:   alucontrol <= `MAX_CONTROL;
 			
 			default: alucontrol <= 5'b0;
 		endcase
