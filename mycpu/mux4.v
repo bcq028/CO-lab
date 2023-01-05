@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+/* verilator lint_off TIMESCALEMOD */
 module mux4 #(parameter width = 8) (
 	input wire [width-1:0] d0,
 	input wire [width-1:0] d1,

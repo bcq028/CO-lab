@@ -23,67 +23,54 @@
 module datapath(
 	input  wire clk,
 	input  wire rst,
-	// fetch stage
 	output wire [31:0] pcF,
-	input  wire [31:0] instrF,
-	// decode stage
-	input  wire pcsrcD,
-	input  wire branchD,
-	output wire equalD,
-	input  wire balD,
-	input  wire jD,
-	input  wire jalD,
-	input  wire jrD,
-	input  wire jalrD,
-	output wire [5:0] opD,
-	output wire [5:0] functD,
-	output wire [4:0] rsD,
-	output wire [4:0] rtD,
-	input  wire [1:0] hilowriteD,
-	input  wire syscallD,
-	input  wire breakD,
-	input  wire eretD,
-	input  wire invalidityD,
-	// execute stage
-	input  wire memtoregE,
-	input  wire [1:0] alusrcE,
-	input  wire regdstE,
-	input  wire regwriteE,
-	input  wire [4:0] alucontrolE,
-	output wire flushE,
-	output wire stallE,
-	output wire overflow,
-	// memory visit stage
-	input  wire memtoregM,
-	input  wire regwriteM,
 	output wire [31:0] aluoutM,
 	output wire [31:0] writedata2M,
 	input  wire [31:0] readdataM,
 	output wire [3:0] selM,
-	input  wire cp0writeM,
-	output wire flushM,
-	output wire exceptionoccur,
-	// write back stage
+	output wire regwriteW,
 	output wire [31:0] pcW,
-	input  wire memtoregW,
-	input  wire regwriteW,
 	output wire [4:0] writeregW,
 	output wire [31:0] resultW,
-	output wire flushW 
     );
 	
-	// fetch stage
+	// fetch
 	wire stallF;
+	wire instrF;
 	wire isindelayslotF;
 	wire [7:0] exceptionF;
 	wire flushF;
-	// FD
+	// decode
+	wire [5:0] opD;
+	wire [5:0] functD;
+	wire [4:0] rsD;
+	wire [4:0] rtD;
 	wire [31:0] pcnextFD;
 	wire [31:0] pcnextbrFD;
 	wire [31:0] pcnextjrFD;
 	wire [31:0] pcplus4F;
 	wire [31:0] pcbranchD;
-	// decode stage
+	wire branchD;
+	wire equalD;
+	wire pcsrcD;
+	wire hilowriteD;
+	wire balD;
+	wire jD;
+	wire jalD;
+	wire jrD;
+	wire jalrD;
+	wire syscallD;
+	wire breakD;
+	wire eretD;
+	wire invalidityD;
+	wire [3:0] aluopD;
+	wire memtoregD;
+	wire memwriteD;
+	wire [1:0] alusrcD;
+	wire regdstD;
+	wire regwriteD;
+	wire [4:0] alucontrolD;
+	wire cp0writeD;
 	wire [31:0] instrD;
 	wire [31:0] pcD;
 	wire [31:0] pcplus4D;
@@ -105,8 +92,14 @@ module datapath(
 	wire [31:0] looutD;
 	wire isindelayslotD;
 	wire [7:0] exceptionD;
-	// execute stage
+	// execute 
+	wire memwriteE;
+	wire cp0writeE;
 	wire [31:0] instrE; 
+	wire alusrcE;
+	wire regdstE;
+	wire alucontrolE;
+	wire overflow;
 	wire [31:0] pcE;
 	wire [5:0] opE;
 	wire [1:0] forwardaE;
@@ -117,6 +110,10 @@ module datapath(
 	wire [4:0] rdE;
 	wire [4:0] saE;
 	wire [4:0] writeregE;
+	wire regwriteE;
+	wire memtoregE;
+	wire flushE;
+	wire stallE;
 	wire [4:0] writereg2E;
 	wire [31:0] signimmE;
 	wire [31:0] zeroimmE;
@@ -151,11 +148,17 @@ module datapath(
 	wire [31:0] cp0dataoutE;
 	wire [31:0] cp0dataout2E;
 	wire forwardcp0dataE;
-	// memory visit stage
+	wire exceptionoccur;
+	// memory 
 	wire [31:0] instrM;
 	wire [31:0] pcM;
 	wire [5:0] opM;
 	wire [4:0] rdM;
+	wire regwriteM;
+	wire memtoregM;
+	wire cp0writeM;
+	wire memwriteM;
+	wire flushM;
 	wire [4:0] writeregM;
 	wire [1:0] hilowriteM;
 	wire [31:0] hialuoutM;
@@ -178,13 +181,49 @@ module datapath(
 	wire [31:0] pridout;
 	wire [31:0] badvaddrout;
 	wire timerintout;
-	// write back stage
+	// write 
+	wire [32:0] writedataW;
+	wire memtoregW;
+	wire flushW;
 	wire [31:0] instrW;
 	wire [31:0] aluoutW;
 	wire [31:0] readdataW;
 	wire [1:0] hilowriteW;
 	wire [31:0] hialuoutW;
 	wire [31:0] loaluoutW;
+
+	assign pcsrcD = branchD & equalD;
+
+	maindec maindec (
+		.op 		(opD		),
+		.funct 		(functD		),
+		.rs			(rsD		),
+		.rt 		(rtD 		),
+		.aluop 		(aluopD		),
+		.alusrc 	(alusrcD	),
+		.hilowrite 	(hilowriteD	),
+		.regwrite 	(regwriteD	),
+		.regdst 	(regdstD	),
+		.memwrite 	(memwriteD	),
+		.memtoreg 	(memtoregD	),
+		.branch 	(branchD	),
+		.bal 		(balD		),
+		.j 			(jD			),
+		.jal 		(jalD 		),
+		.jr 		(jrD 		),
+		.jalr 		(jalrD 		),
+		.cp0write	(cp0writeD	),
+		.syscall 	(syscallD	),
+		.breakM		(breakD		),
+		.eret		(eretD		),
+		.invalidity (invalidityD)
+	);
+
+	aludec aludec(
+		.funct(functD),
+		.aluop(aluopD),
+		.alucontrol(alucontrolD)
+	);
 
 	// hazard detection
 	hazard h (
@@ -294,6 +333,14 @@ module datapath(
 	flopenrc #(8)  r17E (clk,rst,~stallE,flushE,{exceptionD[7],syscallD,breakD,eretD,invalidityD,exceptionD[2:0]},exceptionE);
 	flopenrc #(32) r18E (clk,rst,~stallE,flushE,instrD,instrE);
 
+	flopenrc #(12) regE (
+		clk,
+		rst,
+		~stallE,
+		flushE,
+		{memtoregD,memwriteD,alusrcD,regdstD,regwriteD,alucontrolD,cp0writeD},
+		{memtoregE,memwriteE,alusrcE,regdstE,regwriteE,alucontrolE,cp0writeE}
+	);
 	mux3 #(32) forwardaemux (srcaE,aluoutM,resultW,forwardaE,srca2E);
 	mux3 #(32) forwardbemux (srcbE,aluoutM,resultW,forwardbE,srcb2E);
 
@@ -330,6 +377,11 @@ module datapath(
 	floprc #(1)  r9M (clk,rst,flushM,isindelayslotE,isindelayslotM);
 	floprc #(8)  r10M (clk,rst,flushM,{exceptionE[7:3],overflow,exceptionE[1:0]},exceptionM);
 	floprc #(32) r11M (clk,rst,flushM,instrE,instrM);
+	floprc #(4) regM (
+		clk,rst,flushM,
+		{memtoregE,memwriteE,regwriteE & ~overflow,cp0writeE},
+		{memtoregM,memwriteM,regwriteM,cp0writeM}
+	);
 
 	memsel memsel (pcM,opM,aluoutM,writedataM,readdataM,selM,writedata2M,finaldataM,erroraddrM,laddrerrorM,saddrerrorM);
 
@@ -368,6 +420,11 @@ module datapath(
 	floprc #(32) r6W (clk,rst,flushW,pcM,pcW);
 	floprc #(32) r7W (clk,rst,flushW,writedata2M,writedataW);
 	floprc #(32) r8W (clk,rst,flushW,instrM,instrW);
+	floprc #(2) regW (
+		clk,rst,flushW,
+		{memtoregM,regwriteM},
+		{memtoregW,regwriteW}
+	);
 
 	instdec instdec (instrF,ascii);
 
