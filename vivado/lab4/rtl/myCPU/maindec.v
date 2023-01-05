@@ -41,14 +41,14 @@ module maindec(
 	output wire jalr,
 	output wire cp0write,
 	output wire syscall,
-	output wire break,
+	output wire breakM,
 	output wire eret,
 	output reg  invalidity
     );
 
 	reg [21:0] controls;
 
-	assign {aluop,alusrc,hilowrite,regwrite,regdst,memwrite,memtoreg,branch,bal,j,jal,jr,jalr,cp0write,syscall,break,eret} = controls;
+	assign {aluop,alusrc,hilowrite,regwrite,regdst,memwrite,memtoreg,branch,bal,j,jal,jr,jalr,cp0write,syscall,breakM,eret} = controls;
 
 	always @ (*)
 	begin

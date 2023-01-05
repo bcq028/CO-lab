@@ -95,7 +95,7 @@ module controller(
 		.jalr 		(jalrD 		),
 		.cp0write	(cp0writeD	),
 		.syscall 	(syscallD	),
-		.break		(breakD		),
+		.breakM		(breakD		),
 		.eret		(eretD		),
 		.invalidity (invalidityD)
 	);

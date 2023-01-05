@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module mips(
+module mycpu_top(
 	// input  wire clk,
 	// input  wire rst,
 	// output wire [31:0] pcF,
@@ -32,7 +32,7 @@ module mips(
 	// output wire [3:0] selM
 	input  wire clk,
 	input  wire resetn,
-	input  wire [5:0] intt,
+	input  wire [5:0] ext_int,
 
 	output wire inst_sram_en,
 	output wire [3:0] inst_sram_wen,
@@ -63,19 +63,16 @@ module mips(
 	assign rst = resetn;
 	assign inst_sram_en = 1'b1;
 	assign inst_sram_wen = 1'b0;
-	assign inst_sram_addr = pcF;
 	assign inst_sram_wdata = 32'b0;
 	assign instrF = inst_sram_rdata;
 
-	assign data_sram_en = memwriteM & ~exceptionoccur;
+	assign data_sram_en = 1'b1;
 	assign data_sram_wen = selM;
-	assign data_sram_addr = aluoutM;
 	assign data_sram_wdata = writedata2M;
 	assign readdataM = data_sram_rdata;
 
 	assign debug_wb_pc = pcW;
-	// assign debug_wb_rf_wen = {4{regwriteW}};
-	assign debug_wb_rf_wen = {4{1'b0}};
+	assign debug_wb_rf_wen = {4{regwriteW}};
 	assign debug_wb_rf_wnum = writeregW;
 	assign debug_wb_rf_wdata = resultW;
 	
@@ -124,8 +121,8 @@ module mips(
 	wire flushW;
 	
 	controller controller (
-		.clk			(clk			),
-		.rst 			(rst			),
+		.clk			(~clk			),
+		.rst 			(~resetn			),
 		// decode stage
 		.opD 			(opD			),
 		.functD			(functD			),
@@ -166,8 +163,8 @@ module mips(
 	);
 
 	datapath datapath (
-		.clk			(clk			),
-		.rst 			(rst 			),
+		.clk			(~clk			),
+		.rst 			(~resetn			),
 		// fetch stage
 		.pcF			(pcF			),
 		.instrF			(instrF			),
@@ -216,5 +213,15 @@ module mips(
 		.resultW		(resultW		),
 		.flushW			(flushW			)
 	);
+
+	    // 虚拟地址转换成物理地址   
+    mmu mmu(
+        .inst_vaddr(pcF),
+        .inst_paddr(inst_sram_addr),
+        .data_vaddr(aluoutM),
+        .data_paddr(data_sram_addr),
+        .no_dcache(no_dcache)    //是否经过d cache
+    );
+
 	
 endmodule
